@@ -24,6 +24,6 @@ type Favorite struct {
 
 type Follower struct {
 	ID           int    `gorm:"follow_id"`
-	following_id string `db:"following_id"`
-	followed_id  string `db:"followed_id"`
+	Following_id string `db:"following_id"`
+	Followed_id  string `db:"followed_id"`
 }

@@ -7,6 +7,7 @@ import (
 
 	"github.com/ramenjp/signup"
 	"github.com/ramenjp/structs"
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -62,13 +63,29 @@ func main() {
 	})
 
 	engine.POST("/createUser", func(c *gin.Context) {
-		name := c.PostForm("name")
+		username := c.PostForm("username")
 		email := c.PostForm("email")
 		password := c.PostForm("password")
-		fmt.Println("namw: " + name + "email:" + email + "password" + password)
-		newUser := signup.CreateUser(name, email, password)
+		fmt.Println("name: " + username + "email:" + email + "password" + password)
+		newUser := signup.CreateUser(username, email, password)
 
 		db.Create(&newUser)
+	})
+
+	engine.POST("/login", func(c *gin.Context) {
+		username := c.PostForm("username")
+		password := c.PostForm("password")
+		db := gormConnect()
+		var loginUser structs.User
+		db.First(&loginUser, "user_name = ?", username)
+
+		err := bcrypt.CompareHashAndPassword([]byte(loginUser.Password), []byte(password))
+		if err != nil {
+			fmt.Println("Failure")
+		} else {
+			fmt.Println("Success")
+		}
+		db.Close()
 	})
 
 	engine.Run(":2001")

@@ -12,9 +12,10 @@ func Intro() {
 	fmt.Println("SIGN UP!!!")
 }
 
-func CreateUser(name string, email string, password string) *structs.User {
+func CreateUser(username string, email string, password string) *structs.User {
+	fmt.Println("CreateUser")
 	hashedPassword, _ := PasswordEncrypt(password)
-	newUser := &structs.User{Name: name, UserName: "", Email: email, Password: hashedPassword, Bio: "", Profile_img: ""}
+	newUser := &structs.User{Name: "", UserName: username, Email: email, Password: hashedPassword, Bio: "", Profile_img: ""}
 
 	return newUser
 }
@@ -26,6 +27,6 @@ func PasswordEncrypt(password string) (string, error) {
 }
 
 //hash password と非hash password比較
-func CompareHashAndPassword(hash, password string) error {
-	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+func CompareHashAndPassword(hashedPassword, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
