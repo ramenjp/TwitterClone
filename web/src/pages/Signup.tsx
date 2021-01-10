@@ -3,14 +3,18 @@ import * as Signup from '../templates/Signup'
 import * as Formik from 'formik'
 import * as Yup from 'yup'
 import axios from 'axios'
+import * as ReactRouter from 'react-router-dom'
+
 
 type userData = {
     username:string,
     email:string,
     password:string
-}
+} 
 
-export const Component = () => {
+type Props = {} & ReactRouter.RouteComponentProps
+
+export const Component = (props:Props) => {
   const formik = Formik.useFormik({
     initialValues: {
       username:'',
@@ -27,7 +31,11 @@ export const Component = () => {
       params.append('username', userData.username)
       params.append('email', userData.email)
       params.append('password', userData.password)
-      const res = await axios.post('http://localhost:2001/createUser', params)
+      const response = await axios.post('http://localhost:2001/createUser', params)
+      if (response) {
+          console.log("redirect");
+          props.history.replace(`login`);
+      }
     },
     validationSchema: () => {
       return Yup.object().shape({

@@ -89,4 +89,7 @@ const LoginButton = styled.button`
     font-weight:bold;
     font-size:15px;
     display: block;
+    &:hover {
+        cursor:pointer
+    }
 `

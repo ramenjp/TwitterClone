@@ -1,6 +1,9 @@
 import * as React from 'react'
 import styled from 'styled-components'
+import * as ReactRouter from 'react-router-dom'
+
 import logo from "../assets/logo.svg"
+
 
 type Props ={
     username:string,
@@ -33,6 +36,11 @@ export const Component = (props:Props) => {
                     />
                     <LoginButton>ログイン</LoginButton>
                 </form>
+            <StyledLink>
+            <ReactRouter.Link to="signup">
+                <LoginButton>会員登録</LoginButton>
+            </ReactRouter.Link>
+            </StyledLink>
             </Contents>
         </Wrap>
     )
@@ -80,4 +88,18 @@ background-color:#1da1f2;
 font-weight:bold;
 font-size:15px;
 display: block;
+margin-bottom:30px;
+&:hover {
+    cursor:pointer
+}
 `
+
+const StyledLink = styled.div`
+  a {
+    text-decoration: none;
+    color: black;
+    &:hover {
+        color: #1da1f2;
+    }
+  }
+` 

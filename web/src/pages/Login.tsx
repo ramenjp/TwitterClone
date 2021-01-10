@@ -4,13 +4,18 @@ import * as Login from '../templates/Login'
 import * as Formik from 'formik'
 import * as Yup from 'yup'
 import axios from 'axios'
+// import { useHistory } from 'react-router-dom'
+import * as ReactRouter from 'react-router-dom'
 
 type loginData = {
     username:string,
     password:string
 }
 
+// type Props = {} & ReactRouter.RouteComponentProps
+
 export const Component = () => {
+  const history = ReactRouter.useHistory()
   const formik = Formik.useFormik({
     initialValues: {
       username: '',
@@ -24,12 +29,16 @@ export const Component = () => {
       const params = new URLSearchParams()
       params.append('username', loginData.username)
       params.append('password', loginData.password)
-      const res = await axios.post('http://localhost:2001/login', params)
-    //   if (!res.data?.login) {
-    //     alert('パスワードが違います。')
-    //     return
-    //   }
-    //   window.location.reload()
+      await axios.post('http://localhost:2001/login', params).then((res)=>{ 
+      if(res.status == 200){
+          history.replace('/top')
+        }
+      })
+      .catch(()=> {
+        alert('パスワードが違います。')
+        window.location.reload()
+        return
+      })
     },
     validationSchema: () => {
       return Yup.object().shape({

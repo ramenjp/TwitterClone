@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import * as ReactRouter from 'react-router-dom'
 
 type Props = {
+  user?: any
   users?: any
   tweets?: any
   content?: any
@@ -12,18 +13,28 @@ type Props = {
 }
 
 export const Component = (props: Props) => {
+    
+    const renderTweets = () =>{
+        const {tweets} = props
+        const tweetKeyList = Object.keys(tweets)
+
+        return tweetKeyList.map((key) => {
+        return <Tweet key={key}>{tweets[key].Content}</Tweet>
+        })
+    }
+
   const renderUsers = () => {
     const { users } = props
     const usersKeyList = Object.keys(users)
     return usersKeyList.map(item => {
       return (
-        <UserList>
+        <UserList key={item}>
           <StyledLink>
             <ReactRouter.Link to={`/${users[item].UserName}/profile`}>
-              <UserListItem key={item}>{users[item].UserName}</UserListItem>
+              <UserListItem>{users[item].UserName}</UserListItem>
             </ReactRouter.Link>
           </StyledLink>
-          {/* フォローボタン追加 */}
+          {/* TODO : フォローボタン追加 */}
           {/* <ReactRouter.Link to={`/${users[item].UserName}/profile`}>
             <FollowButton>フォローする</FollowButton>
           </ReactRouter.Link> */}
@@ -32,13 +43,11 @@ export const Component = (props: Props) => {
     })
   }
 
-  React.useEffect(() => {
-    console.log('users3', props.users)
-  }, [props.users])
   return (
     <MainWrapper>
       <ContentWrapper>
         <ul>
+          <SidebarItem>ログインID：{props.user.UserName}</SidebarItem>
           <SidebarItem>ホーム</SidebarItem>
           <SidebarItem>プロフィール</SidebarItem>
           <SidebarItem>ツイートする</SidebarItem>
@@ -56,6 +65,9 @@ export const Component = (props: Props) => {
           />
           <TweetButton type='submit'>ツイートする</TweetButton>
         </form>
+        <TweetList>
+        {renderTweets()}
+        </TweetList>
       </ContentWrapper>
       <ContentWrapper>
         <div>User List</div>
@@ -100,7 +112,7 @@ const FullInput = styled.input`
   outline: none;
   width: 100%;
   border-bottom: 1px solid #a0a0a0;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `
 
 const TweetButton = styled.button`
@@ -155,4 +167,18 @@ const FollowButton = styled.button`
   &:hover {
     cursor: pointer;
   }
+`
+
+const TweetList = styled.div`
+margin-top:20px;
+width:100%;
+border:1px solid #a0a0a0;
+border-bottom:none;
+`
+
+const Tweet = styled.div`
+border-bottom:1px solid #a0a0a0;
+font-size:15px;
+padding:30px 0 30px 50px;
+text-align:left;
 `
