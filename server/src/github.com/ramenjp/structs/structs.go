@@ -27,3 +27,13 @@ type Follower struct {
 	Following_id string `db:"following_id"`
 	Followed_id  string `db:"followed_id"`
 }
+
+type ReturnContent struct {
+	LoginUser User
+	Tweets    []Tweet
+	Users     []User
+}
+
+type SessionInfo struct {
+	LoginUserID string
+}
