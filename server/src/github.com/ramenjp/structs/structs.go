@@ -1,5 +1,7 @@
 package structs
 
+import "time"
+
 type User struct {
 	ID          int    `gorm:"user_id"`
 	Name        string `db:"name"`
@@ -11,9 +13,10 @@ type User struct {
 }
 
 type Tweet struct {
-	ID      int    `gorm:"tweet_id"`
-	User_id int    `db:"user_id"`
-	Content string `db:"content"`
+	ID        int       `gorm:"tweet_id"`
+	User_id   int       `db:"user_id"`
+	Content   string    `db:"content"`
+	CreatedAt time.Time `gorm:"type:datetime(6)"`
 }
 
 type Favorite struct {
