@@ -1,30 +1,31 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import * as ReactRouter from 'react-router-dom'
+import * as Tweet from '../components/Tweet'
 
 type Props = {
   user?: any
   users?: any
   tweets?: any
   content?: any
+  logout: () => void
 
   handleChange: (eventOrPath: string | React.ChangeEvent<any>) => void
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void
 }
 
 export const Component = (props: Props) => {
+    const { user,users,tweets } = props;
     
     const renderTweets = () =>{
-        const {tweets} = props
         const tweetKeyList = Object.keys(tweets)
 
         return tweetKeyList.map((key) => {
-        return <Tweet key={key}>{tweets[key].Content}</Tweet>
+            return <Tweet.Component key={key} tweet={tweets[key].Content} date={tweets[key].CreatedAt} id={tweets[key].ID}/>
         })
     }
 
   const renderUsers = () => {
-    const { users } = props
     const usersKeyList = Object.keys(users)
     return usersKeyList.map(item => {
       return (
@@ -47,10 +48,11 @@ export const Component = (props: Props) => {
     <MainWrapper>
       <ContentWrapper>
         <ul>
-          <SidebarItem>ログインID：{props.user.UserName}</SidebarItem>
+          <SidebarItem>ログインID：{user.UserName}</SidebarItem>
           <SidebarItem>ホーム</SidebarItem>
-          <SidebarItem>プロフィール</SidebarItem>
+          <SidebarItem><ReactRouter.Link to={`${user.UserName}/profile`}>プロフィール</ReactRouter.Link></SidebarItem>
           <SidebarItem>ツイートする</SidebarItem>
+          <SidebarItem onClick={props.logout}>ログアウト</SidebarItem>
         </ul>
       </ContentWrapper>
       <ContentWrapper>
@@ -86,6 +88,10 @@ const SidebarItem = styled.li`
   list-style: none;
   &:hover {
     color: #1da1f2;
+    cursor:pointer;
+  }
+  a {
+    text-decoration: none;
   }
 `
 
@@ -176,9 +182,3 @@ border:1px solid #a0a0a0;
 border-bottom:none;
 `
 
-const Tweet = styled.div`
-border-bottom:1px solid #a0a0a0;
-font-size:15px;
-padding:30px 0 30px 50px;
-text-align:left;
-`

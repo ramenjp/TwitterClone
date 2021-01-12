@@ -3,7 +3,6 @@ import * as ReactRouter from 'react-router-dom'
 
 import * as Top from './pages/Top'
 import * as Profile from './pages/Profile'
-import * as Home from './pages/Home'
 import * as Login from './pages/Login'
 import * as Signup from './pages/Signup'
 import * as Auth from './Auth'

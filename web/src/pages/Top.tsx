@@ -1,5 +1,5 @@
 import * as React from 'react'
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import '../plugins/setting.js'
 import * as Formik from 'formik'
 import * as Yup from 'yup'
@@ -18,7 +18,9 @@ export const Component = () => {
       const content: string = values.content
       params.append('content', content)
       console.log('params', params)
-      await axios.post('http://localhost:2001/createTweet', params).then(()=>{
+      await axios.post('http://localhost:2001/createTweet', params,{
+          withCredentials:true
+      }).then(()=>{
           values.content=""
           window.location.reload()
       })
@@ -35,13 +37,24 @@ export const Component = () => {
   const [user,setUser] = React.useState([])
   const [users, setUsers] = React.useState([])
 
+  const logout = async () => {
+    try {
+        const res = await axios.get('http://localhost:2001/logout',{
+            withCredentials:true
+        })
+        history.replace('/')
+    }catch (error){
+        return
+    }
+  }
 
   React.useEffect(() => {
       const fetchData = async () => {
       console.log("fetchData")
       try {
-        const res = await axios.get('http://localhost:2001/top')
-        console.log("res.data.LoginUser",res.data.LoginUser)
+        const res = await axios.get('http://localhost:2001/top',{
+            withCredentials:true
+        })
         setUser(res.data.LoginUser)
         setUsers(res.data.Users);
         setTweets(res.data.Tweets);
@@ -60,6 +73,7 @@ export const Component = () => {
       tweets={tweets}
       content={contentField}
 
+      logout={logout}
       handleChange={formik.handleChange}
       handleSubmit={formik.handleSubmit}
       />

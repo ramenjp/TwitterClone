@@ -21,7 +21,7 @@ export const Component = () => {
       username: '',
       password: ''
     },
-    onSubmit: async (values: any) => {
+    onSubmit: async values => {
       const loginData:loginData = {
         username:values.username,
         password:values.password,
@@ -29,9 +29,12 @@ export const Component = () => {
       const params = new URLSearchParams()
       params.append('username', loginData.username)
       params.append('password', loginData.password)
-      await axios.post('http://localhost:2001/login', params).then((res)=>{ 
-      if(res.status == 200){
-          history.replace('/top')
+      await axios.post('http://localhost:2001/login', params,{
+          withCredentials:true
+      }).then((res)=>{
+      if(res.status === 200){
+          console.log("if")
+          history.push("/top")
         }
       })
       .catch(()=> {

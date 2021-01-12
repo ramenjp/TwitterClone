@@ -13,7 +13,6 @@ type Props ={
     handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void
 }
 
-const nothingDo = ()=>{}
 export const Component = (props:Props) => {
     return (
         <Wrap>
