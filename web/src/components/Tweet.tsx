@@ -9,66 +9,79 @@ import axios from 'axios'
 type Props = {
   tweet: string
   date?: any
-  id?:any
+  id?: any
 }
 
 export const Component = (props: Props) => {
+  const { tweet, date, id } = props
   const [like, setLike] = React.useState(false)
   const [reTweet, setReTweet] = React.useState(false)
 
   const toggleLike = async () => {
-
-    if(!like) {
-        try{
-            const res = await axios.post('http://localhost:2001/like',{
-            withCredentials:true
-           })
-           setLike(!like)
-        } catch(error) {
-            return
-        }
-    }
-    else {
-        try{
-            const res = await axios.post('http://localhost:2001/dislike',{
-            withCredentials:true
-           })
-           setLike(!like)
-        } catch(error) {
-            return
-        }
+    const tweetId = id
+    const params = new URLSearchParams()
+    params.append('tweetId', tweetId)
+    if (!like) {
+      try {
+        const res = await axios.post('http://localhost:2001/like', params, {
+          withCredentials: true
+        })
+        setLike(!like)
+      } catch (error) {
+        return
+      }
+    } else {
+      try {
+        const res = await axios.post('http://localhost:2001/dislike', params, {
+          withCredentials: true
+        })
+        setLike(!like)
+      } catch (error) {
+        return
+      }
     }
   }
 
   const toggleReTweet = async () => {
-    if(!reTweet) {
-        try{
-            const res = await axios.get('http://localhost:2001/reTweet',{
-            withCredentials:true
-           })
-           setReTweet(!reTweet)
-        } catch(error) {
-            return
-        }
-    }
-    else {
-        try{
-            const res = await axios.get('http://localhost:2001/deleteReTweet',{
-            withCredentials:true
-           })
-           setReTweet(!reTweet)
-        } catch(error) {
-            return
-        }
+    const tweetId = id
+    const params = new URLSearchParams()
+    params.append('tweetId', tweetId)
+    if (!reTweet) {
+      try {
+        const params = new URLSearchParams()
+        params.append('test', 'test')
+        const res = await axios.post('http://localhost:2001/reTweet', params, {
+          withCredentials: true
+        })
+        setReTweet(!reTweet)
+      } catch (error) {
+        console.log('error')
+        return
+      }
+    } else {
+      try {
+        const params = new URLSearchParams()
+        params.append('test', 'test')
+        const res = await axios.post(
+          'http://localhost:2001/deleteReTweet',
+          params,
+          {
+            withCredentials: true
+          }
+        )
+        setReTweet(!reTweet)
+      } catch (error) {
+        return
+      }
     }
   }
 
-  const { tweet } = props
   return (
     <Tweet>
-     
       {tweet}
-      <div>{props.date} :{props.id}</div>
+      <div>
+        {date} :{id}
+      </div>
       <Share>
         <LikeWrapper onClick={toggleLike}>
           {like ? <Like src={pushedHeart} /> : <Like src={heart} />}
@@ -95,7 +108,7 @@ const Tweet = styled.div`
 
 const Share = styled.div`
   padding-top: 10px;
-  display:flex;
+  display: flex;
 `
 
 const ReTweet = styled.img`

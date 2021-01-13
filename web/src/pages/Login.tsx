@@ -8,8 +8,8 @@ import axios from 'axios'
 import * as ReactRouter from 'react-router-dom'
 
 type loginData = {
-    username:string,
-    password:string
+  username: string
+  password: string
 }
 
 // type Props = {} & ReactRouter.RouteComponentProps
@@ -22,26 +22,27 @@ export const Component = () => {
       password: ''
     },
     onSubmit: async values => {
-      const loginData:loginData = {
-        username:values.username,
-        password:values.password,
-    }
+      const loginData: loginData = {
+        username: values.username,
+        password: values.password
+      }
       const params = new URLSearchParams()
       params.append('username', loginData.username)
       params.append('password', loginData.password)
-      await axios.post('http://localhost:2001/login', params,{
-          withCredentials:true
-      }).then((res)=>{
-      if(res.status === 200){
-          console.log("if")
-          history.push("/top")
-        }
-      })
-      .catch(()=> {
-        alert('パスワードが違います。')
-        window.location.reload()
-        return
-      })
+      await axios
+        .post('http://localhost:2001/login', params, {
+          withCredentials: true
+        })
+        .then(res => {
+          if (res.status === 200) {
+            history.push('/top')
+          }
+        })
+        .catch(() => {
+          alert('パスワードが違います。')
+          window.location.reload()
+          return
+        })
     },
     validationSchema: () => {
       return Yup.object().shape({
@@ -51,7 +52,9 @@ export const Component = () => {
     },
     enableReinitialize: true
   })
-  const usernameField: string = React.useMemo(() => formik.values.username, [formik])
+  const usernameField: string = React.useMemo(() => formik.values.username, [
+    formik
+  ])
   const passwordField = React.useMemo(() => formik.values.password, [formik])
   return (
     <Login.Component

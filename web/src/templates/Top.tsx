@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import * as ReactRouter from 'react-router-dom'
 import * as Tweet from '../components/Tweet'
+import * as FollowButton from '../components/FollowButton'
 
 type Props = {
   user?: any
@@ -15,15 +16,22 @@ type Props = {
 }
 
 export const Component = (props: Props) => {
-    const { user,users,tweets } = props;
-    
-    const renderTweets = () =>{
-        const tweetKeyList = Object.keys(tweets)
+  const { user, users, tweets } = props
 
-        return tweetKeyList.map((key) => {
-            return <Tweet.Component key={key} tweet={tweets[key].Content} date={tweets[key].CreatedAt} id={tweets[key].ID}/>
-        })
-    }
+  const renderTweets = () => {
+    const tweetKeyList = Object.keys(tweets)
+
+    return tweetKeyList.map(key => {
+      return (
+        <Tweet.Component
+          key={key}
+          tweet={tweets[key].Content}
+          date={tweets[key].CreatedAt}
+          id={tweets[key].ID}
+        />
+      )
+    })
+  }
 
   const renderUsers = () => {
     const usersKeyList = Object.keys(users)
@@ -35,10 +43,7 @@ export const Component = (props: Props) => {
               <UserListItem>{users[item].UserName}</UserListItem>
             </ReactRouter.Link>
           </StyledLink>
-          {/* TODO : フォローボタン追加 */}
-          {/* <ReactRouter.Link to={`/${users[item].UserName}/profile`}>
-            <FollowButton>フォローする</FollowButton>
-          </ReactRouter.Link> */}
+          <FollowButton.Component userId={users[item].ID} />
         </UserList>
       )
     })
@@ -49,9 +54,11 @@ export const Component = (props: Props) => {
       <ContentWrapper>
         <ul>
           <SidebarItem>ログインID：{user.UserName}</SidebarItem>
-          <SidebarItem>ホーム</SidebarItem>
-          <SidebarItem><ReactRouter.Link to={`${user.UserName}/profile`}>プロフィール</ReactRouter.Link></SidebarItem>
-          <SidebarItem>ツイートする</SidebarItem>
+          <SidebarItem>
+            <ReactRouter.Link to={`${user.UserName}/profile`}>
+              プロフィール
+            </ReactRouter.Link>
+          </SidebarItem>
           <SidebarItem onClick={props.logout}>ログアウト</SidebarItem>
         </ul>
       </ContentWrapper>
@@ -67,12 +74,10 @@ export const Component = (props: Props) => {
           />
           <TweetButton type='submit'>ツイートする</TweetButton>
         </form>
-        <TweetList>
-        {renderTweets()}
-        </TweetList>
+        <TweetList>{renderTweets()}</TweetList>
       </ContentWrapper>
       <ContentWrapper>
-        <div>User List</div>
+        <Text>User List</Text>
         <ul>{renderUsers()}</ul>
       </ContentWrapper>
     </MainWrapper>
@@ -88,7 +93,7 @@ const SidebarItem = styled.li`
   list-style: none;
   &:hover {
     color: #1da1f2;
-    cursor:pointer;
+    cursor: pointer;
   }
   a {
     text-decoration: none;
@@ -151,34 +156,20 @@ const StyledLink = styled.div`
     text-decoration: none;
     color: black;
     &:hover {
-        color: #1da1f2;
+      color: #1da1f2;
     }
   }
 `
 
-// todo: ユーザ名右にフォローボタン
-const FollowButton = styled.button`
-  border: none;
-  border-radius: 9999px;
-  outline: none;
-  width: 140px;
-  height: 30px;
-  color: white;
-  background-color: #1da1f2;
-  font-weight: bold;
-  font-size: 15px;
-  display: block;
-  margin: 0 0 0 auto;
-  text-decoration: none;
-  &:hover {
-    cursor: pointer;
-  }
-`
-
 const TweetList = styled.div`
-margin-top:20px;
-width:100%;
-border:1px solid #a0a0a0;
-border-bottom:none;
+  margin-top: 20px;
+  width: 100%;
+  border: 1px solid #a0a0a0;
+  border-bottom: none;
 `
 
+const Text = styled.div`
+  margin: 15px 0;
+  font-size: 19px;
+  font-weight: bold;
+`

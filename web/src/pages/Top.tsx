@@ -7,23 +7,23 @@ import * as Top from '../templates/Top'
 import * as ReactRouter from 'react-router-dom'
 
 export const Component = () => {
-    const history = ReactRouter.useHistory()
+  const history = ReactRouter.useHistory()
   const formik = Formik.useFormik({
     initialValues: {
       content: ''
     },
     onSubmit: async values => {
-      console.log('createTweet')
       const params = new URLSearchParams()
       const content: string = values.content
       params.append('content', content)
-      console.log('params', params)
-      await axios.post('http://localhost:2001/createTweet', params,{
-          withCredentials:true
-      }).then(()=>{
-          values.content=""
+      await axios
+        .post('http://localhost:2001/createTweet', params, {
+          withCredentials: true
+        })
+        .then(() => {
+          values.content = ''
           window.location.reload()
-      })
+        })
     },
     validationSchema: () => {
       return Yup.object().shape({
@@ -34,49 +34,48 @@ export const Component = () => {
   })
 
   const [tweets, setTweets] = React.useState([])
-  const [user,setUser] = React.useState([])
+  const [user, setUser] = React.useState([])
   const [users, setUsers] = React.useState([])
 
   const logout = async () => {
     try {
-        const res = await axios.get('http://localhost:2001/logout',{
-            withCredentials:true
-        })
-        history.replace('/')
-    }catch (error){
-        return
+      const res = await axios.get('http://localhost:2001/logout', {
+        withCredentials: true
+      })
+      history.replace('/')
+    } catch (error) {
+      return
     }
   }
 
   React.useEffect(() => {
-      const fetchData = async () => {
-      console.log("fetchData")
+    const fetchData = async () => {
       try {
-        const res = await axios.get('http://localhost:2001/top',{
-            withCredentials:true
+        const res = await axios.get('http://localhost:2001/top', {
+          withCredentials: true
         })
         setUser(res.data.LoginUser)
-        setUsers(res.data.Users);
-        setTweets(res.data.Tweets);
-      } catch( error ) {
+        setUsers(res.data.Users)
+        setTweets(res.data.Tweets)
+      } catch (error) {
         history.replace('/')
       }
     }
     fetchData()
   }, [])
 
-  const contentField:string = React.useMemo(() => formik.values.content, [formik])
+  const contentField: string = React.useMemo(() => formik.values.content, [
+    formik
+  ])
   return (
-      <Top.Component
+    <Top.Component
       user={user}
       users={users}
       tweets={tweets}
       content={contentField}
-
       logout={logout}
       handleChange={formik.handleChange}
       handleSubmit={formik.handleSubmit}
-      />
+    />
   )
 }
-
