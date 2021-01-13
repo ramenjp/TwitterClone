@@ -3,40 +3,36 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
+	"github.com/ramenjp/auth"
+	"github.com/ramenjp/migrate"
 	"github.com/ramenjp/signup"
 	"github.com/ramenjp/structs"
-	"golang.org/x/crypto/bcrypt"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 const location = "Asia/Tokyo"
 
-// func init() {
-// 	loc, err := time.LoadLocation(location)
-// 	if err != nil {
-// 		loc = time.FixedZone(location, 9*60*60)
-// 	}
-// 	time.Local = loc
-// }
+func init() {
+	loc, err := time.LoadLocation(location)
+	if err != nil {
+		loc = time.FixedZone(location, 9*60*60)
+	}
+	time.Local = loc
+}
 
 func main() {
-	now := time.Now()
-	fmt.Println("time", now.Format(time.RFC3339))
-
-	db := gormConnect()
+	db := migrate.GormConnect()
 	defer db.Close()
 
 	engine := gin.Default()
-	// option := sessions.Options{MaxAge: 3600}
-	// sessions.Options(option)
 	store := cookie.NewStore([]byte("secret"))
 	engine.Use(sessions.Sessions("mysession", store))
 
@@ -71,7 +67,7 @@ func main() {
 	engine.GET("/", func(c *gin.Context) {
 		session := sessions.Default(c)
 		var isLogin bool
-		v := session.Get("loginUserId")
+		v := session.Get("loginuser")
 		if v == nil {
 			isLogin = false
 		} else {
@@ -85,10 +81,9 @@ func main() {
 		var ReturnContent structs.ReturnContent
 		var users []structs.User
 		var tweets []structs.Tweet
-		db := gormConnect()
-		db.Select("user_name").Find(&users)
-		db.Select("content").Order("created_at ASC").Find(&tweets)
-		fmt.Println("/top : tweets", tweets)
+		db := migrate.GormConnect()
+		db.Not("user_name = ?", loginUser.UserName).Select("user_name,id").Find(&users)
+		db.Order("created_at DESC").Find(&tweets)
 		ReturnContent.LoginUser = loginUser
 		ReturnContent.Users = users
 		ReturnContent.Tweets = tweets
@@ -97,15 +92,13 @@ func main() {
 	})
 
 	engine.POST("/createTweet", func(c *gin.Context) {
-		t := time.Now()
-		fmt.Println("/createTweet", t)
 		session := sessions.Default(c)
 		username := session.Get("loginuser")
 		var loginUser structs.User
-		db := gormConnect()
+		db := migrate.GormConnect()
 		db.Where("user_name = ?", username).Find(&loginUser)
 		content := c.PostForm("content")
-		tweet := structs.Tweet{Content: content, User_id: loginUser.ID}
+		tweet := structs.Tweet{Content: content, UserId: loginUser.ID}
 		db.Create(&tweet)
 		db.Close()
 	})
@@ -114,50 +107,44 @@ func main() {
 		username := c.PostForm("username")
 		email := c.PostForm("email")
 		password := c.PostForm("password")
-		fmt.Println("name: " + username + "email:" + email + "password" + password)
 		newUser := signup.CreateUser(username, email, password)
-		db := gormConnect()
+		db := migrate.GormConnect()
 		db.Create(&newUser)
 		db.Close()
 	})
 
 	engine.POST("/login", func(c *gin.Context) {
-		fmt.Println("/login API")
 		username := c.PostForm("username")
 		password := c.PostForm("password")
-		db := gormConnect()
 		var loginUser structs.User
+		db := migrate.GormConnect()
 		db.First(&loginUser, "user_name = ?", username)
 		db.Close()
-		err := bcrypt.CompareHashAndPassword([]byte(loginUser.Password), []byte(password))
-		if err != nil {
-			fmt.Println("Failure")
-			c.JSON(500, gin.H{"msg": err.Error()})
-		} else {
-			// CreateSession(c, username)
-			session := sessions.Default(c)
-			session.Set("loginuser", username)
-			session.Save()
-
-			fmt.Println("Success")
-			c.JSON(200, gin.H{"response": "ログイン完了"})
-		}
+		auth.Login(loginUser.Password, password, loginUser.UserName, c)
 	})
 
 	engine.GET("/logout", func(c *gin.Context) {
-		session := sessions.Default(c)
-		fmt.Println("/logout", session.Get("loginuser"))
-		session.Clear()
-		session.Save()
-		c.String(http.StatusOK, "ログアウト完了")
+		auth.Logout(c)
 	})
 
 	engine.POST("/like", func(c *gin.Context) {
-		fmt.Println("/like")
+		tweetId := c.PostForm("tweetId")
+		id, _ := strconv.Atoi(tweetId)
+		user := GetUser(c)
+
+		favorite := structs.Favorite{UserId: user.ID, TweetID: id}
+		db := migrate.GormConnect()
+		db.Create(&favorite)
+		db.Close()
 	})
 
 	engine.POST("/dislike", func(c *gin.Context) {
-		fmt.Println("/dislike")
+		tweetId := c.PostForm("tweetId")
+		user := GetUser(c)
+		var favorite structs.Favorite
+		db := migrate.GormConnect()
+		db.Where("tweet_id = ?", tweetId).Where("user_id = ?", user.ID).Delete(&favorite)
+		db.Close()
 	})
 
 	engine.POST("/reTweet", func(c *gin.Context) {
@@ -168,6 +155,40 @@ func main() {
 		fmt.Println("/deleteRetweet")
 	})
 
+	engine.POST("/follow", func(c *gin.Context) {
+		userid := c.PostForm("userId")
+		id, _ := strconv.Atoi(userid)
+		loginUserId := GetUser(c).ID
+
+		follower := structs.Follower{Following_id: loginUserId, Followed_id: id}
+		db := migrate.GormConnect()
+		db.Create(&follower)
+		db.Close()
+	})
+
+	engine.POST("/unfollow", func(c *gin.Context) {
+		userid := c.PostForm("userId")
+		id, _ := strconv.Atoi(userid)
+		loginUserId := GetUser(c).ID
+
+		var follower structs.Follower
+		db := migrate.GormConnect()
+		db.Where("followed_id=?", id).Where("following_id=?", loginUserId).Delete(&follower)
+		db.Close()
+	})
+
+	engine.POST("/judgeIsMyAccout", func(c *gin.Context) {
+		loginUserId := GetUser(c).UserName
+		var userId = c.PostForm("userId")
+		if loginUserId == userId {
+			fmt.Println("myAccount")
+			c.String(http.StatusOK, "MyAccount")
+		} else {
+			fmt.Println("OtherAccount")
+			c.String(http.StatusOK, "OtherAccout")
+		}
+	})
+
 	engine.GET("/profile", func(c *gin.Context) {
 		//ツイート取得
 		type ReturnContent struct {
@@ -176,12 +197,32 @@ func main() {
 		}
 		var returnContent ReturnContent
 		var tweets []structs.Tweet
-		db = gormConnect()
+		db = migrate.GormConnect()
 		loginUser := GetUser(c)
 		db.Where("user_id = ?", loginUser.ID).Find(&tweets)
 		db.Close()
 		returnContent.LoginUser = loginUser
 		returnContent.LoginUserTweets = tweets
+		c.JSON(http.StatusOK, returnContent)
+	})
+
+	engine.POST("/otherProfile", func(c *gin.Context) {
+		//ツイート取得
+		type ReturnContent struct {
+			user       structs.User
+			userTweets []structs.Tweet
+		}
+		var returnContent ReturnContent
+		var user structs.User
+		var tweets []structs.Tweet
+
+		username := c.PostForm("userName")
+		db = migrate.GormConnect()
+		db.Where("user_name = ?", username).Find(&tweets)
+		db.Where("user_name = ?", username).Find(&user)
+		db.Close()
+		returnContent.user = user
+		returnContent.userTweets = tweets
 		fmt.Println("return Content", returnContent)
 		c.JSON(http.StatusOK, returnContent)
 	})
@@ -193,7 +234,7 @@ func main() {
 
 		var user structs.User
 		loginUser := GetUser(c)
-		db = gormConnect()
+		db = migrate.GormConnect()
 		db.Model(&user).Where("ID = ?", loginUser.ID).Updates(map[string]interface{}{"Name": name, "UserName": username, "Bio": bio})
 		fmt.Println("update完了")
 		db.Close()
@@ -202,42 +243,12 @@ func main() {
 	engine.Run(":2001")
 }
 
-func gormConnect() *gorm.DB {
-	DBMS := "mysql"
-	USER := "root"
-	// PASS := "root"
-	PROTOCOL := "tcp(localhost:3306)"
-	DBNAME := "Twitter"
-	CHAR_SET := "?charset=utf8"
-	TIME_OPTION := "&parseTime=true"
-	LOCAL := "&loc=Local"
-
-	CONNECT := USER + ":" + "@" + PROTOCOL + "/" + DBNAME + CHAR_SET + TIME_OPTION + LOCAL
-	fmt.Println("CONNECT", CONNECT)
-	db, err := gorm.Open(DBMS, CONNECT)
-	db.AutoMigrate(&structs.User{}, &structs.Tweet{}, &structs.Favorite{}, &structs.Follower{})
-
-	if err != nil {
-		panic(err.Error())
-	}
-	return db
-}
-
-func CreateSession(c *gin.Context, username string) {
-	session := sessions.Default(c)
-	session.Set("loginUserId", username)
-	session.Save()
-
-	user := session.Get("loginUserId")
-	fmt.Println("CreateSession.username", user)
-}
-
 //ユーザ情報取得
 func GetUser(c *gin.Context) structs.User {
 	session := sessions.Default(c)
 	username := session.Get("loginuser")
 	var loginUser structs.User
-	db := gormConnect()
+	db := migrate.GormConnect()
 	db.Where("user_name = ?", username).Find(&loginUser)
 	var user structs.User
 	fmt.Println("getUser.username", username)

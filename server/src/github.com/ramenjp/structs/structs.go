@@ -3,32 +3,39 @@ package structs
 import "time"
 
 type User struct {
-	ID          int    `gorm:"user_id"`
+	ID          int    `gorm:"id"`
 	Name        string `db:"name"`
 	UserName    string `gorm:"unique"`
 	Email       string `db:"email"`
 	Password    string `db:"password"`
 	Bio         string `db:"bio"`
 	Profile_img string `db:"profile_img"`
+	Tweet       []Tweet
+	Favorite    []Favorite
 }
 
 type Tweet struct {
-	ID        int       `gorm:"tweet_id"`
-	User_id   int       `db:"user_id"`
+	ID        int       `db:"tweet_id"`
+	UserId    int       `db:"user_id"`
 	Content   string    `db:"content"`
-	CreatedAt time.Time `gorm:"type:datetime(6)"`
+	CreatedAt time.Time `db:"created_at"`
+	Favorite  []Favorite
 }
 
+// UserとTweetの中間テーブル
+// 「誰が」「どの記事を」いいねしているかを管理。
 type Favorite struct {
 	ID      int `gorm:"favorite_id"`
-	User_id int `db:"user_id"`
+	UserId  int `db:"user_id"`
 	TweetID int `db:"tweet_id"`
 }
 
+// UserとUserの中間テーブル
+// 「どのユーザーが」「どのユーザーを」フォローしているかを管理
 type Follower struct {
-	ID           int    `gorm:"follow_id"`
-	Following_id string `db:"following_id"`
-	Followed_id  string `db:"followed_id"`
+	ID           int `gorm:"follow_id"`
+	Following_id int `db:"following_id"`
+	Followed_id  int `db:"followed_id"`
 }
 
 type ReturnContent struct {
