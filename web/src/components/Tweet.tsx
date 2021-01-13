@@ -1,15 +1,22 @@
 import * as React from 'react'
 import styled from 'styled-components'
+import axios from 'axios'
+
 import heart from '../assets/heart.svg'
 import pushedHeart from '../assets/pushedHeart.svg'
 import retweet from '../assets/retweet.svg'
 import pushedRetweet from '../assets/pushedRetweet.svg'
-import axios from 'axios'
 
 type Props = {
   tweet: string
   date?: any
   id?: any
+}
+
+type Tweet = {
+    content:string
+    date?:any
+    id?:any
 }
 
 export const Component = (props: Props) => {
@@ -79,9 +86,9 @@ export const Component = (props: Props) => {
   return (
     <Tweet>
       {tweet}
-      <div>
-        {date} :{id}
-      </div>
+      <Date>
+        {date}
+      </Date>
       <Share>
         <LikeWrapper onClick={toggleLike}>
           {like ? <Like src={pushedHeart} /> : <Like src={heart} />}
@@ -132,4 +139,8 @@ const ReTweetWrapper = styled.div`
   &:hover {
     cursor: pointer;
   }
+`
+
+const Date = styled.div`
+
 `

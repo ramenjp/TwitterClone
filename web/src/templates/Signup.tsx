@@ -1,7 +1,8 @@
 import * as React from 'react'
+import * as Text from '../components/Text'
 import styled from 'styled-components'
-import logo from "../assets/logo.svg"
 
+import logo from "../assets/logo.svg"
 type Props ={
     username:string
     email:string,
@@ -16,7 +17,7 @@ export const Component = (props:Props) => {
         <Wrap>
             <Contents>
                 <Logo src={logo} />
-                <Text>アカウントを作成</Text>
+                <Text.Component text="アカウントを作成" />
                 <form onSubmit={props.handleSubmit}>
                     <FullInput
                         type='text'
@@ -45,12 +46,6 @@ export const Component = (props:Props) => {
         </Wrap>
     )
 }
-
-const Text = styled.div`
-    margin:10px 0;
-    font-size:19px;
-    font-weight:bold;
-`
 
 const Wrap = styled.div`
     display: flex;

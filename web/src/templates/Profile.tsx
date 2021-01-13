@@ -1,8 +1,9 @@
 import * as React from 'react'
-import * as Tweet from '../components/Tweet'
 import * as ReactRouter from 'react-router-dom'
-
 import styled from 'styled-components'
+
+import * as Tweet from '../components/Tweet'
+import * as Text from '../components/Text'
 type Props = {
   user?: any
   tweet?: any
@@ -50,7 +51,7 @@ export const Component = (props: Props) => {
     <Wrapper>
       <StyledLink>
         <ReactRouter.Link to='/top'>
-          <Text>ホームに戻る</Text>
+          <Text.Component text="ホームに戻る"/>
         </ReactRouter.Link>
       </StyledLink>
       <EditButton onClick={toggleEdit}>プロフィールを編集</EditButton>
@@ -72,7 +73,7 @@ export const Component = (props: Props) => {
       ) : (
         <div>
           <form onSubmit={props.handleSubmit}>
-            <Text>名前</Text>
+            <Text.Component text="名前" />
             <FullInput
               type='text'
               name='name'
@@ -80,7 +81,7 @@ export const Component = (props: Props) => {
               value={props.name}
               onChange={props.handleChange}
             />
-            <Text>ユーザネーム</Text>
+            <Text.Component text="ユーザネーム"/>
             <FullInput
               type='text'
               name='username'
@@ -88,7 +89,7 @@ export const Component = (props: Props) => {
               value={props.username}
               onChange={props.handleChange}
             />
-            <Text>自己紹介</Text>
+            <Text.Component text="自己紹介"/>
             <FullInputArea
               name='bio'
               placeholder='自己紹介'
@@ -195,12 +196,6 @@ const LoginButton = styled.button`
   &:hover {
     cursor: pointer;
   }
-`
-
-const Text = styled.div`
-  margin: 10px 0;
-  font-size: 19px;
-  font-weight: bold;
 `
 
 const UserName = styled.div`

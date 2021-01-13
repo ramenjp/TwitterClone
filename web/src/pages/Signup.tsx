@@ -1,10 +1,10 @@
 import * as React from 'react'
-import * as Signup from '../templates/Signup'
 import * as Formik from 'formik'
 import * as Yup from 'yup'
 import axios from 'axios'
 import * as ReactRouter from 'react-router-dom'
 
+import * as Signup from '../templates/Signup'
 
 type userData = {
     username:string,

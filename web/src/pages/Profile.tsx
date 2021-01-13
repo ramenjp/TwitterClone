@@ -1,25 +1,14 @@
 import * as React from 'react'
-import * as Profile from '../templates/Profile'
-import * as OtherProfile from '../templates/OtherProfile'
-import '../plugins/setting.js'
-
 import * as ReactRouter from 'react-router-dom'
 import * as Formik from 'formik'
 import * as Yup from 'yup'
 import axios from 'axios'
-import * as qs from 'qs'
+import '../plugins/setting.js'
+
+import * as Profile from '../templates/Profile'
+import * as OtherProfile from '../templates/OtherProfile'
 
 type Props = {} & ReactRouter.RouteComponentProps<{ userId: string }>
-
-// type User = {
-//     ID :number
-// 	Name:string
-// 	UserName:string
-// 	Email : string
-// 	Password : string
-// 	Bio :string
-// 	Profile_img:string
-// }
 
 export const Component = (props: Props) => {
   const location = ReactRouter.useLocation()

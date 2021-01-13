@@ -1,7 +1,9 @@
 import * as React from 'react'
 import * as ReactRouter from 'react-router-dom'
 import styled from 'styled-components'
+
 import * as Tweet from '../components/Tweet'
+import * as Text from '../components/Text'
 
 type Props = {
     user?:any
@@ -20,7 +22,7 @@ export const Component = (props:Props) => {
         <Wrapper>
             <StyledLink>
             <ReactRouter.Link to="/top">
-            <Text>ホームに戻る</Text>
+            <Text.Component text="ホームに戻る"/>
             </ReactRouter.Link>
             </StyledLink>
         <div>
@@ -82,41 +84,6 @@ const DisplayContent = styled.div`
 
 `
 
-const EditButton = styled.button`
-  border-color: #1da1f2;
-  border-width:1px;
-  border-radius: 9999px;
-  outline: none;
-  width: 167px;
-  height: 40px;
-  color: #1da1f2;
-  background-color:white;
-  font-weight: bold;
-  font-size: 15px;
-  display: block;
-  margin: 0 0 0 auto;
-  text-decoration: none;
-  &:hover {
-    cursor: pointer;
-  }
-`
-
-const FullInput = styled.input`
-padding:5px;
-margin-bottom:14px;
-font-size:19px;
-    width: 100%;
-    box-sizing: border-box;
-`
-
-const FullInputArea = styled.textarea`
-padding:15px;
-margin-bottom:14px;
-font-size:19px;
-    width: 100%;
-    box-sizing: border-box;
-`
-
 const LoginButton = styled.button`
 border: none;
 border-radius:9999px;
@@ -132,12 +99,6 @@ margin-bottom:30px;
 &:hover {
     cursor:pointer
 }
-`
-
-const Text = styled.div`
-margin:10px 0;
-font-size:19px;
-font-weight:bold;
 `
 
 const UserName = styled.div`

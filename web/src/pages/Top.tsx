@@ -1,10 +1,12 @@
 import * as React from 'react'
 import axios from 'axios'
-import '../plugins/setting.js'
 import * as Formik from 'formik'
 import * as Yup from 'yup'
-import * as Top from '../templates/Top'
 import * as ReactRouter from 'react-router-dom'
+import '../plugins/setting.js'
+
+import * as Top from '../templates/Top'
+import * as Interface from '../interface/interface'
 
 export const Component = () => {
   const history = ReactRouter.useHistory()
@@ -33,9 +35,17 @@ export const Component = () => {
     enableReinitialize: true
   })
 
-  const [tweets, setTweets] = React.useState([])
-  const [user, setUser] = React.useState([])
-  const [users, setUsers] = React.useState([])
+  const [users, setUsers] = React.useState<Interface.User[]>([])
+  const [tweets, setTweets] = React.useState<Interface.Tweet[]>([])
+  const [user, setUser] = React.useState<Interface.User>({
+    ID: 0,
+    Name: "",
+    UserName: "",
+    Bio: "",
+    Email: "",
+    Password:"",
+    Profile_img: ""
+  })
 
   const logout = async () => {
     try {
@@ -54,6 +64,8 @@ export const Component = () => {
         const res = await axios.get('http://localhost:2001/top', {
           withCredentials: true
         })
+        // TODO: フォローしてるユーザーのみツイートをとってくる
+        console.log("res.data.Tweets",res.data.Tweets)
         setUser(res.data.LoginUser)
         setUsers(res.data.Users)
         setTweets(res.data.Tweets)

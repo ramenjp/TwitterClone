@@ -1,11 +1,10 @@
 import * as React from 'react'
-// import styled from 'styled-components'
-import * as Login from '../templates/Login'
 import * as Formik from 'formik'
 import * as Yup from 'yup'
 import axios from 'axios'
-// import { useHistory } from 'react-router-dom'
 import * as ReactRouter from 'react-router-dom'
+
+import * as Login from '../templates/Login'
 
 type loginData = {
   username: string

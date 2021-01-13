@@ -1,9 +1,9 @@
 import * as React from 'react'
-import styled from 'styled-components'
 import * as ReactRouter from 'react-router-dom'
+import styled from 'styled-components'
 
+import * as Text from '../components/Text'
 import logo from "../assets/logo.svg"
-
 
 type Props ={
     username:string,
@@ -18,7 +18,7 @@ export const Component = (props:Props) => {
         <Wrap>
             <Contents>
                 <Logo src={logo} />
-                <Text>Twitterにログイン</Text>
+                <Text.Component text="Twitterにログイン"/>
                 <form onSubmit={props.handleSubmit}>
                     <FullInput
                         type='text'
@@ -45,11 +45,7 @@ export const Component = (props:Props) => {
     )
 }
 
-const Text = styled.div`
-margin:10px 0;
-font-size:19px;
-font-weight:bold;
-`
+
 
 const Wrap = styled.div`
     display: flex;

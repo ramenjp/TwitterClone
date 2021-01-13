@@ -1,16 +1,19 @@
 import * as React from 'react'
-import styled from 'styled-components'
 import * as ReactRouter from 'react-router-dom'
+import styled from 'styled-components'
+
 import * as Tweet from '../components/Tweet'
 import * as FollowButton from '../components/FollowButton'
+import * as Text from '../components/Text'
+import * as Interface from '../interface/interface'
 
 type Props = {
-  user?: any
-  users?: any
-  tweets?: any
-  content?: any
+  user: Interface.User
+  users: Interface.User[]
+  tweets: Interface.Tweet[]
+  content: string
+  
   logout: () => void
-
   handleChange: (eventOrPath: string | React.ChangeEvent<any>) => void
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void
 }
@@ -20,14 +23,14 @@ export const Component = (props: Props) => {
 
   const renderTweets = () => {
     const tweetKeyList = Object.keys(tweets)
-
     return tweetKeyList.map(key => {
+      const keyNum = parseInt(key)
       return (
         <Tweet.Component
           key={key}
-          tweet={tweets[key].Content}
-          date={tweets[key].CreatedAt}
-          id={tweets[key].ID}
+          tweet={tweets[keyNum].Content}
+          date={tweets[keyNum].CreatedAt}
+          id={tweets[keyNum].ID}
         />
       )
     })
@@ -35,15 +38,16 @@ export const Component = (props: Props) => {
 
   const renderUsers = () => {
     const usersKeyList = Object.keys(users)
-    return usersKeyList.map(item => {
+    return usersKeyList.map(key => {
+      const keyNum = parseInt(key)
       return (
-        <UserList key={item}>
+        <UserList key={keyNum}>
           <StyledLink>
-            <ReactRouter.Link to={`/${users[item].UserName}/profile`}>
-              <UserListItem>{users[item].UserName}</UserListItem>
+            <ReactRouter.Link to={`/${users[keyNum].UserName}/profile`}>
+              <UserListItem>{users[keyNum].UserName}</UserListItem>
             </ReactRouter.Link>
           </StyledLink>
-          <FollowButton.Component userId={users[item].ID} />
+          <FollowButton.Component userId={users[keyNum].ID} />
         </UserList>
       )
     })
@@ -77,7 +81,7 @@ export const Component = (props: Props) => {
         <TweetList>{renderTweets()}</TweetList>
       </ContentWrapper>
       <ContentWrapper>
-        <Text>User List</Text>
+        <Text.Component text="User List" />
         <ul>{renderUsers()}</ul>
       </ContentWrapper>
     </MainWrapper>
@@ -166,10 +170,4 @@ const TweetList = styled.div`
   width: 100%;
   border: 1px solid #a0a0a0;
   border-bottom: none;
-`
-
-const Text = styled.div`
-  margin: 15px 0;
-  font-size: 19px;
-  font-weight: bold;
 `
