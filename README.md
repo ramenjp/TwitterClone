@@ -49,7 +49,7 @@
 - POST   /updateUser           
 
 ## ER図
-<img width="24" alt="スクリーンショット 2021-01-14 23 34 56" src="https://user-images.githubusercontent.com/49260657/104606100-b083bd80-56c2-11eb-8134-a3b5b0366009.png">
+<img width="24" alt="スクリーンショット" src="https://user-images.githubusercontent.com/49260657/104606100-b083bd80-56c2-11eb-8134-a3b5b0366009.png">
 
 ## 実装できた機能
 - ログイン
