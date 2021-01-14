@@ -11,8 +11,6 @@ type loginData = {
   password: string
 }
 
-// type Props = {} & ReactRouter.RouteComponentProps
-
 export const Component = () => {
   const history = ReactRouter.useHistory()
   const formik = Formik.useFormik({

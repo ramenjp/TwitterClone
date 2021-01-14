@@ -10,27 +10,17 @@ type Props = {
   username: string
   name: string
   bio: string
+//   image: any
 
   handleChange: (eventOrPath: string | React.ChangeEvent<any>) => void
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void
 }
 
-type User = {
-  ID: number
-  Name: string
-  UserName: string
-  Email: string
-  Password: string
-  Bio: string
-  Profile_img: string
-}
-
 export const Component = (props: Props) => {
-  const { tweet, user } = props
+  const { tweet, user ,name,username,bio} = props
   const [content, setContent] = React.useState(true)
   const [isEdit, setIsEdit] = React.useState(true)
-  // const [files, selectFiles] = FileUpload.useFileUpload();
-
+  
   const renderTweet = () => {
     const tweetKeyList = Object.keys(tweet)
     return tweetKeyList.map(key => {
@@ -47,11 +37,25 @@ export const Component = (props: Props) => {
     setIsEdit(!isEdit)
   }
 
+//   const onFileChange= (e:any) => {
+//     const files = e.target.files
+//     if(files.length > 0) {
+//         var file = files[0]
+//         var reader = new FileReader()
+//         reader.onload = (e) => {
+//             if(e.target.result){
+//                 setFileName(e.target.result)
+//             }
+//         };
+//         reader.readAsDataURL(file)
+//     }
+// }
+  
   return (
     <Wrapper>
       <StyledLink>
         <ReactRouter.Link to='/top'>
-          <Text.Component text="ホームに戻る"/>
+          <Text.Component text='ホームに戻る' />
         </ReactRouter.Link>
       </StyledLink>
       <EditButton onClick={toggleEdit}>プロフィールを編集</EditButton>
@@ -73,35 +77,38 @@ export const Component = (props: Props) => {
       ) : (
         <div>
           <form onSubmit={props.handleSubmit}>
-            <Text.Component text="名前" />
+            <Text.Component text='名前' />
             <FullInput
               type='text'
               name='name'
               placeholder='名前'
-              value={props.name}
+              value={name}
               onChange={props.handleChange}
             />
-            <Text.Component text="ユーザネーム"/>
+            <Text.Component text='ユーザネーム' />
             <FullInput
               type='text'
               name='username'
               placeholder='ユーザーネーム'
-              value={props.username}
+              value={username}
               onChange={props.handleChange}
             />
-            <Text.Component text="自己紹介"/>
+            <Text.Component text='自己紹介' />
             <FullInputArea
               name='bio'
               placeholder='自己紹介'
-              value={props.bio}
+              value={bio}
               onChange={props.handleChange}
             />
-            {/* <input 
-                        type="file"　
-                        accept=".png, .jpg, .jpeg"
-                        value={user.Profile_img}
-                        onChange={props.handleChange}
-                    /> */}
+            {/* <input
+              id="profile_image"
+              name="image"
+              type='file'
+              accept='.png, .jpg, .jpeg'
+              value={image}
+              onChange={e =>onFileChange(e) }
+            />
+            <img src={!image ? filename : image} /> */}
             <LoginButton>編集完了</LoginButton>
           </form>
         </div>

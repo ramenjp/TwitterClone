@@ -43,7 +43,7 @@ export const Component = (props: Props) => {
       return (
         <UserList key={keyNum}>
           <StyledLink>
-            <ReactRouter.Link to={`/${users[keyNum].UserName}/profile`}>
+            <ReactRouter.Link to={`/${users[keyNum].UserName}`}>
               <UserListItem>{users[keyNum].UserName}</UserListItem>
             </ReactRouter.Link>
           </StyledLink>
@@ -59,7 +59,7 @@ export const Component = (props: Props) => {
         <ul>
           <SidebarItem>ログインID：{user.UserName}</SidebarItem>
           <SidebarItem>
-            <ReactRouter.Link to={`${user.UserName}/profile`}>
+            <ReactRouter.Link to={`${user.UserName}`}>
               プロフィール
             </ReactRouter.Link>
           </SidebarItem>

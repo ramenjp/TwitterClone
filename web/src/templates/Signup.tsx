@@ -22,7 +22,7 @@ export const Component = (props:Props) => {
                     <FullInput
                         type='text'
                         name='username'
-                        placeholder='名前'
+                        placeholder='ユーザーネーム'
                         value={props.username}
                         onChange={props.handleChange}
                     />
