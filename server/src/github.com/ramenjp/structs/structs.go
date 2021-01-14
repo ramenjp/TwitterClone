@@ -3,7 +3,7 @@ package structs
 import "time"
 
 type User struct {
-	ID          int    `gorm:"id"`
+	ID          int    `gorm:"primary key"`
 	Name        string `db:"name"`
 	UserName    string `gorm:"unique"`
 	Email       string `db:"email"`
@@ -23,7 +23,7 @@ type Tweet struct {
 }
 
 // UserとTweetの中間テーブル
-// 「誰が」「どの記事を」いいねしているかを管理。
+// 「誰が」「どのツイートを」いいねしているかを管理。
 type Favorite struct {
 	ID      int `gorm:"favorite_id"`
 	UserId  int `db:"user_id"`
