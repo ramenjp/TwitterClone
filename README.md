@@ -1,4 +1,10 @@
 # README
+## 環境構築
+- cd server
+- go env -w User/TwitterClone/server
+
+- cd web
+- yarn install
 
 ## 技術スタック
 **フロントエンド**
@@ -26,22 +32,34 @@
 - CSSはここで記述する
 
 ### バックエンド
-- GET    /top                  a 
-- GET    /logout               a
-- GET    /profile              a
-- POST   /createTweet          a
-- POST   /createUser           a
-- POST   /login                a
-- POST   /like                 a
-- POST   /dislike              a
-- POST   /reTweet              a
-- POST   /deleteReTweet        a
-- POST   /follow               a
-- POST   /unfollow             a
-- POST   /judgeIsMyAccout      a
-- POST   /otherProfile         a
-- POST   /updateUser           a
+- GET    /top                  
+- GET    /logout               
+- GET    /profile              
+- POST   /createTweet          
+- POST   /createUser           
+- POST   /login                
+- POST   /like                 
+- POST   /dislike              
+- POST   /reTweet              
+- POST   /deleteReTweet        
+- POST   /follow               
+- POST   /unfollow             
+- POST   /judgeIsMyAccout      
+- POST   /otherProfile         
+- POST   /updateUser           
 
 ## ER図
 
+## 実装できた機能
+- ログイン
+- ログアウト
+- セッション管理
+- 会員登録
+- ツイート機能
+- フォロー機能
+- 
+
 ## 実装が不十分な箇所,今後改善したい箇所
+- ツイートがフォローしているユーザのツイートしか表示できない(自分のツイートが表示できない)
+- フォローボタンを押して状態を変えた後画面をリロードするとフォローはされているが未フォロー状態のボタンが表示される
+- 他ユーザーのプロフィール画面を見ると情報が表示されない
