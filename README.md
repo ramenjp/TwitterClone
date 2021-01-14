@@ -49,7 +49,8 @@
 - POST   /updateUser           
 
 ## ER図
-<img width="24" alt="スクリーンショット" src="https://user-images.githubusercontent.com/49260657/104606100-b083bd80-56c2-11eb-8134-a3b5b0366009.png">
+<img width="594" alt="スクリーンショット 2021-01-15 8 16 55" src="https://user-images.githubusercontent.com/49260657/104660510-092a7900-570a-11eb-9fc0-dcfcd82521b0.png">
+
 
 ## 実装できた機能
 - ログイン
