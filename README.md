@@ -31,22 +31,22 @@
 - pageから渡されたpropsを表示する責務
 - CSSはここで記述する
 
-### バックエンド
-- GET    /top                  
-- GET    /logout               
-- GET    /profile              
-- POST   /createTweet          
-- POST   /createUser           
-- POST   /login                
-- POST   /like                 
-- POST   /dislike              
+## エンドポイント
+- GET    /top            フォローしているユーザのツイート、自分のユーザ情報返す
+- GET    /logout         セッションを削除しログアウトする      
+- GET    /profile        自分のユーザ情報とツイートを返す
+- POST   /createTweet    フロントから渡された情報をもとにツイートをDBに保存      
+- POST   /createUser     フロントから渡された情報をもとにユーザーをDBに保存      
+- POST   /login          ユーザーネームとパスワードを元に、DBにハッシュ化されたパスワードと入力されたパスワードをハッシュした結果が同じなら200を返し、セッションを作る
+- POST   /like           Favoriteテーブルにログイン中のユーザーIDとツイートIDを含んだカラムを作成
+- POST   /dislike        Favoriteテーブルにログイン中のユーザーIDとツイートIDを含んだカラムを削除      
 - POST   /reTweet              
 - POST   /deleteReTweet        
-- POST   /follow               
-- POST   /unfollow             
-- POST   /judgeIsMyAccout      
-- POST   /otherProfile         
-- POST   /updateUser           
+- POST   /follow         Followersテーブルにログイン中のユーザーIDとフォロー対象のユーザーIDを含んだカラムを作成
+- POST   /unfollow       Followersテーブルにログイン中のユーザーIDとフォロー対象のユーザーIDを含んだカラムを削除      
+- POST   /judgeIsMyAccout   プロフィール画面が自分の画面か他ユーザの画面がを判定し、bool値を返す   
+- POST   /otherProfile   選択したユーザーネームをもとにユーザー情報を返す      
+- POST   /updateUser     フロントから渡された情報をもとにユーザー情報を上書きし、DBに保存       
 
 ## ER図
 <img width="594" alt="スクリーンショット 2021-01-15 8 16 55" src="https://user-images.githubusercontent.com/49260657/104660510-092a7900-570a-11eb-9fc0-dcfcd82521b0.png">
