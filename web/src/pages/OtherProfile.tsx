@@ -28,9 +28,12 @@ export const Component = (props: Props) => {
       const params = new URLSearchParams()
       params.append('username', username)
       const res = await axios.post(
-        'http://localhost:2001/otherProfile',params,{
+        'http://localhost:2001/otherProfile',
+        params,
+        {
           withCredentials: true
-      })
+        }
+      )
       setUser(res.data.User)
       setTweet(res.data.Tweets)
     } catch (error) {

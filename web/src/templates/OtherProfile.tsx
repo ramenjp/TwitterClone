@@ -11,15 +11,21 @@ type Props = {
 }
 
 export const Component = (props: Props) => {
-    const { tweets, user } = props
-    const [content, setContent] = React.useState(true)
-    console.log("templates/ user",user)
-    console.log("templates/ tweets",tweets)
+  const { tweets, user } = props
+  const [content, setContent] = React.useState(true)
+  console.log('templates/ user', user)
+  console.log('templates/ tweets', tweets)
 
   const renderTweet = () => {
     const tweetKeyList = Object.keys(tweets)
     return tweetKeyList.map(key => {
-      return <Tweet.Component key={key} tweet={tweets[key]} date={tweets[key].CreatedAt}/>
+      return (
+        <Tweet.Component
+          key={key}
+          tweet={tweets[key]}
+          date={tweets[key].CreatedAt}
+        />
+      )
     })
   }
 
@@ -32,26 +38,26 @@ export const Component = (props: Props) => {
 
   return (
     <Wrapper>
-        <Menu>
-      <StyledLink>
-        <ReactRouter.Link to='/top'>
-          <Text.Component text='ホームに戻る' />
-        </ReactRouter.Link>
-      </StyledLink>
-      <FollowButton.Component userId={user.UserName}/>
+      <Menu>
+        <StyledLink>
+          <ReactRouter.Link to='/top'>
+            <Text.Component text='ホームに戻る' />
+          </ReactRouter.Link>
+        </StyledLink>
+        <FollowButton.Component userId={user.UserName} />
       </Menu>
       <div>
         <ProfileWrapper>
-              <Name>{user.Name}</Name>
-              <UserName>@{user.UserName}</UserName>
-              <Bio>{user.Bio}</Bio>
+          <Name>{user.Name}</Name>
+          <UserName>@{user.UserName}</UserName>
+          <Bio>{user.Bio}</Bio>
         </ProfileWrapper>
         <Menu>
           <MenuItem onClick={toggleTweetContent}>ツイート</MenuItem>
           <MenuItem onClick={toggleLikeContent}>いいね</MenuItem>
         </Menu>
         <DisplayContent>
-            {/* {tweets && <ul>{renderTweet()}</ul>} */}
+          {/* {tweets && <ul>{renderTweet()}</ul>} */}
         </DisplayContent>
       </div>
     </Wrapper>

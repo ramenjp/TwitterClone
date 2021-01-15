@@ -12,29 +12,41 @@ type Props = {
   username: string
   name: string
   bio: string
-  params:string
-//   image: any
+  params: string
+  //   image: any
 
   handleChange: (eventOrPath: string | React.ChangeEvent<any>) => void
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void
 }
 
 export const Component = (props: Props) => {
-  const { tweet,likeTweet, user ,name,username,bio,params} = props
+  const { tweet, likeTweet, user, name, username, bio, params } = props
   const [content, setContent] = React.useState(true)
   const [isEdit, setIsEdit] = React.useState(true)
-  
+
   const renderTweet = () => {
     const tweetKeyList = Object.keys(tweet)
     return tweetKeyList.map(key => {
-      return <Tweet.Component key={key} tweet={tweet[key].Content} date={tweet[key].CreatedAt}/>
+      return (
+        <Tweet.Component
+          key={key}
+          tweet={tweet[key].Content}
+          date={tweet[key].CreatedAt}
+        />
+      )
     })
   }
 
   const renderLikeTweet = () => {
     const tweetKeyList = Object.keys(likeTweet)
     return tweetKeyList.map(key => {
-      return <Tweet.Component key={key} tweet={likeTweet[key].Content} date={tweet[key].CreatedAt}/>
+      return (
+        <Tweet.Component
+          key={key}
+          tweet={likeTweet[key].Content}
+          date={tweet[key].CreatedAt}
+        />
+      )
     })
   }
   const toggleTweetContent = () => {
@@ -47,20 +59,20 @@ export const Component = (props: Props) => {
     setIsEdit(!isEdit)
   }
 
-//   const onFileChange= (e:any) => {
-//     const files = e.target.files
-//     if(files.length > 0) {
-//         var file = files[0]
-//         var reader = new FileReader()
-//         reader.onload = (e) => {
-//             if(e.target.result){
-//                 setFileName(e.target.result)
-//             }
-//         };
-//         reader.readAsDataURL(file)
-//     }
-// }
-  
+  //   const onFileChange= (e:any) => {
+  //     const files = e.target.files
+  //     if(files.length > 0) {
+  //         var file = files[0]
+  //         var reader = new FileReader()
+  //         reader.onload = (e) => {
+  //             if(e.target.result){
+  //                 setFileName(e.target.result)
+  //             }
+  //         };
+  //         reader.readAsDataURL(file)
+  //     }
+  // }
+
   return (
     <Wrapper>
       <StyledLink>
@@ -76,9 +88,9 @@ export const Component = (props: Props) => {
             <UserName>@{user.UserName}</UserName>
             <Bio>{user.Bio}</Bio>
             <StyledLink>
-            <ReactRouter.Link to={`${params}/following`}>
-               フォロー中のユーザーを見る
-            </ReactRouter.Link>
+              <ReactRouter.Link to={`${params}/following`}>
+                フォロー中のユーザーを見る
+              </ReactRouter.Link>
             </StyledLink>
           </ProfileWrapper>
           <Menu>
@@ -86,7 +98,11 @@ export const Component = (props: Props) => {
             <MenuItem onClick={toggleLikeContent}>いいね</MenuItem>
           </Menu>
           <DisplayContent>
-            {content ? <ul>{renderTweet()}</ul> : <div>{renderLikeTweet()}</div>}
+            {content ? (
+              <ul>{renderTweet()}</ul>
+            ) : (
+              <div>{renderLikeTweet()}</div>
+            )}
           </DisplayContent>
         </div>
       ) : (

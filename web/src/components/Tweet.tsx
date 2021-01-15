@@ -14,14 +14,14 @@ type Props = {
 }
 
 type Tweet = {
-    content:string
-    date?:any
-    id?:any
+  content: string
+  date?: any
+  id?: any
 }
 
 export const Component = (props: Props) => {
   const { tweet, date, id } = props
-  const time = date.substring( 0, 16).replace('T', ' ');
+  const time = date.substring(0, 16).replace('T', ' ') //サーバー側でやりたい。
   const [like, setLike] = React.useState(false)
   const [reTweet, setReTweet] = React.useState(false)
 
@@ -69,7 +69,7 @@ export const Component = (props: Props) => {
     } else {
       try {
         const params = new URLSearchParams()
-         params.append('tweetId', tweetId)
+        params.append('tweetId', tweetId)
         const res = await axios.post(
           'http://localhost:2001/deleteReTweet',
           params,
@@ -87,9 +87,7 @@ export const Component = (props: Props) => {
   return (
     <Tweet>
       {tweet}
-      <Date>
-        {time}
-      </Date>
+      <Date>{time}</Date>
       <Share>
         <LikeWrapper onClick={toggleLike}>
           {like ? <Like src={pushedHeart} /> : <Like src={heart} />}
@@ -142,6 +140,4 @@ const ReTweetWrapper = styled.div`
   }
 `
 
-const Date = styled.div`
-
-`
+const Date = styled.div``

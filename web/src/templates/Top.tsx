@@ -12,7 +12,7 @@ type Props = {
   users: Interface.User[]
   tweets: Interface.Tweet[]
   content: string
-  
+
   logout: () => void
   handleChange: (eventOrPath: string | React.ChangeEvent<any>) => void
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void
@@ -81,7 +81,7 @@ export const Component = (props: Props) => {
         <TweetList>{renderTweets()}</TweetList>
       </ContentWrapper>
       <ContentWrapper>
-        <Text.Component text="User List" />
+        <Text.Component text='User List' />
         <ul>{renderUsers()}</ul>
       </ContentWrapper>
     </MainWrapper>

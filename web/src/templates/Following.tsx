@@ -44,12 +44,12 @@ export const Component = (props: Props) => {
 
 const Wrapper = styled.div`
   text-align: center;
-  margin:0 auto;
+  margin: 0 auto;
   padding: 50px;
 `
 const ContentWrapper = styled.div`
-display:flex;
-justify-content:center;
+  display: flex;
+  justify-content: center;
 `
 
 const UserList = styled.div``
