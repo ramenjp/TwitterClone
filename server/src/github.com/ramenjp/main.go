@@ -77,30 +77,29 @@ func main() {
 	})
 
 	engine.GET("/top", func(c *gin.Context) {
-		loginUser := GetUser(c)
-		var ReturnContent structs.ReturnContent
-		var users []structs.User
-		var tweets []structs.Tweet
-		//自分以外のユーザ取得
-		db.Not("user_name = ?", loginUser.UserName).Select("user_name,id").Find(&users)
+		session := sessions.Default(c)
+		username := session.Get("loginuser")
+		if username != nil {
+			loginUser := GetUser(c)
+			var ReturnContent structs.ReturnContent
+			var users []structs.User
+			var tweets []structs.Tweet
+			//自分以外のユーザ取得
+			db.Not("user_name = ?", loginUser.UserName).Select("user_name,id").Find(&users)
 
-		// 	SELECT * FROM Twitter.tweets
-		// 	JOIN followers on followed_id = tweets.user_id
-		// 	WHERE followed_id in (
-		// 	SELECT followed_id FROM Twitter.followers
-		// 	JOIN users on users.id  = following_id
-		// 　)
-		db.Order("created_at DESC").
-			Select("tweets.id,tweets.user_id,tweets.content,tweets.created_at").
-			Joins("join followers on followed_id = tweets.user_id").
-			Where("followed_id", db.Table("followers").Select("followed_id").Joins("join users on users.id  = following_id").QueryExpr()).
-			Find(&tweets)
+			db.Order("created_at DESC").
+				Select("tweets.id,tweets.user_id,tweets.content,tweets.created_at").
+				Where("user_id = ?", loginUser.ID).
+				Or(db.Table("followers").Select("followed_id").Where("following_id = ?", loginUser.ID)).
+				Find(&tweets)
 
-		fmt.Println("フォローしてる人のみのtweets", tweets)
-		ReturnContent.LoginUser = loginUser
-		ReturnContent.Users = users
-		ReturnContent.Tweets = tweets
-		c.JSON(http.StatusOK, ReturnContent)
+			ReturnContent.LoginUser = loginUser
+			ReturnContent.Users = users
+			ReturnContent.Tweets = tweets
+			c.JSON(http.StatusOK, ReturnContent)
+		} else {
+			c.String(501, "error")
+		}
 	})
 
 	engine.POST("/createTweet", func(c *gin.Context) {
@@ -150,11 +149,31 @@ func main() {
 	})
 
 	engine.POST("/reTweet", func(c *gin.Context) {
-		fmt.Println("/reTweet")
+		tweetId := c.PostForm("tweetId")
+		loginUser := GetUser(c)
+		type Results struct {
+			Content  string
+			UserName string
+		}
+		var results Results
+		// ツイートidからuser__idを取得して,Userテーブルからユーザネームもとる
+		db.Table("tweets").
+			Select("tweets.content,users.user_name").
+			Joins("join users on users.id = tweets.user_id ").
+			Where("tweets.id = ?", tweetId).
+			Scan(&results)
+		reTweet := structs.Tweet{UserId: loginUser.ID, Content: "@" + results.UserName + "さんからのリツイート: " + results.Content}
+		db.Create(&reTweet)
+		c.String(200, "リツイート")
 	})
 
 	engine.POST("/deleteReTweet", func(c *gin.Context) {
-		fmt.Println("/deleteRetweet")
+		// リツイートテーブルがないとダメなことに気づいた。
+
+		// tweetId := c.PostForm("tweetId")
+		// loginUser := GetUser(c)
+		// var tweet structs.Tweet
+		// db.Where("tweets.id = ?", tweetId).Delete(&tweet)
 	})
 
 	engine.POST("/follow", func(c *gin.Context) {
@@ -168,9 +187,7 @@ func main() {
 
 	engine.POST("/unfollow", func(c *gin.Context) {
 		userid := c.PostForm("userId")
-		// id, _ := strconv.Atoi(userid)
 		loginUserId := GetUser(c).ID
-
 		var follower structs.Follower
 		db.Where("followed_id = ?", userid).Where("following_id=?", loginUserId).Delete(&follower)
 	})
@@ -192,26 +209,37 @@ func main() {
 		type ReturnContent struct {
 			LoginUser       structs.User
 			LoginUserTweets []structs.Tweet
+			LikeTweets      []structs.Tweet
 		}
 		var returnContent ReturnContent
 		var tweets []structs.Tweet
+		var likeTweets []structs.Tweet
 		loginUser := GetUser(c)
 		db.Where("user_id = ?", loginUser.ID).Find(&tweets)
+		db.Where("user_id = ?", loginUser.ID).Find(&likeTweets)
+
+		db.Select("tweets.id,tweets.user_id,tweets.content,tweets.created_at").
+			Joins("join favorites on favorites.tweet_id = tweets.id").
+			Where("favorites.user_id = ?", loginUser.ID).
+			Find(&likeTweets)
 
 		returnContent.LoginUser = loginUser
 		returnContent.LoginUserTweets = tweets
+		returnContent.LikeTweets = likeTweets
 		c.JSON(http.StatusOK, returnContent)
 	})
 
 	engine.POST("/otherProfile", func(c *gin.Context) {
-		type TweetList struct {
-			Content string
-		}
+		// type TweetList struct {
+		// 	Content   string
+		// 	CreatedAt time.Time
+		// }
 		type ReturnContent struct {
-			Tweets []TweetList
+			Tweets []structs.Tweet
 			User   structs.User
 		}
-		var List []TweetList
+
+		var List []structs.Tweet
 		var returnContent ReturnContent
 		var user structs.User
 		username := c.PostForm("username")
@@ -228,6 +256,18 @@ func main() {
 		returnContent.User = user
 		fmt.Println("otherContent user", returnContent)
 		c.JSON(http.StatusOK, returnContent)
+	})
+
+	engine.GET("/getFollowUser", func(c *gin.Context) {
+		loginUser := GetUser(c)
+		var followUsers []structs.User
+
+		db.Table("users").
+			Select("users.id,users.name,users.user_name,users.bio").
+			Joins("join followers on followed_id =users.id").
+			Where("following_id = ?", loginUser.ID).
+			Scan(&followUsers)
+		c.JSON(http.StatusOK, followUsers)
 	})
 
 	engine.POST("/updateUser", func(c *gin.Context) {

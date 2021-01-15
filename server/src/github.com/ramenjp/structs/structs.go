@@ -38,6 +38,11 @@ type Follower struct {
 	Followed_id  int `db:"followed_id"`
 }
 
+type ReTweet struct {
+	ID     int
+	UserId int
+}
+
 type ReturnContent struct {
 	LoginUser User
 	Tweets    []Tweet
