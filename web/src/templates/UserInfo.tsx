@@ -1,6 +1,4 @@
 import * as React from 'react'
-import axios from 'axios'
-import * as ReactRouter from 'react-router-dom'
 
 import * as Profile from '../pages/Profile'
 import * as OtherProfile from '../pages/OtherProfile'

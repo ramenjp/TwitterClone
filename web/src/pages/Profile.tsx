@@ -8,8 +8,10 @@ import '../plugins/setting.js'
 import * as Profile from '../templates/Profile'
 
 export const Component = () => {
+  const match = ReactRouter.useRouteMatch();
   const [file,setFile] = React.useState()
   const [tweet, setTweet] = React.useState([])
+  const [likeTweet, setLikeTweet] = React.useState([])
   const [user, setUser] = React.useState({
     ID: 0,
     Name: '',
@@ -72,6 +74,7 @@ export const Component = () => {
         })
         setUser(res.data.LoginUser)
         setTweet(res.data.LoginUserTweets)
+        setLikeTweet(res.data.LikeTweets)
       } catch (error) {
         console.log('error')
         return
@@ -97,11 +100,14 @@ export const Component = () => {
   return (
         <Profile.Component
           tweet={tweet}
+          likeTweet={likeTweet}
           user={user}
           username={usernameField}
           name={nameField}
           bio={bioField}
         //   image={imageField}
+
+          params={match.url}
           handleChange={formik.handleChange}
           handleSubmit={formik.handleSubmit}
         />

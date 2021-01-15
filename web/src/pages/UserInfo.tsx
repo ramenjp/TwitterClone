@@ -11,7 +11,6 @@ export const Component = (props: Props) => {
   const username:string = props.match.params.userId
 
   React.useEffect(() => {
-      console.log("isMyAccout",isMyAccout)
     //自分のアカウントかどうか判定
     judgeIsMyAccout()
   }, [])
@@ -26,9 +25,13 @@ export const Component = (props: Props) => {
             withCredentials: true
         })
         if (res.data === 'MyAccount') {
-            return setIsMyAccout(true)
+            setIsMyAccout(true)
+            console.log("MyAccunt")
+            return 
         } else {
-            return setIsMyAccout(false)
+            setIsMyAccout(false)
+            console.log("Other Account")
+            return 
         }
     } catch(error) {
 

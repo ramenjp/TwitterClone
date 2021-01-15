@@ -4,23 +4,22 @@ import styled from 'styled-components'
 
 import * as Tweet from '../components/Tweet'
 import * as Text from '../components/Text'
-import * as Interface from '../interface/interface'
-
+import * as FollowButton from '../components/FollowButton'
 type Props = {
   user?: any
   tweets?: any
 }
+
 export const Component = (props: Props) => {
-  const { tweets, user } = props
-  const [content, setContent] = React.useState(true)
-  console.log('props. user', user)
-  console.log('props. tweets', tweets)
+    const { tweets, user } = props
+    const [content, setContent] = React.useState(true)
+    console.log("templates/ user",user)
+    console.log("templates/ tweets",tweets)
 
   const renderTweet = () => {
     const tweetKeyList = Object.keys(tweets)
     return tweetKeyList.map(key => {
-      const keyNum = parseInt(key)
-      return <Tweet.Component key={key} tweet={tweets[keyNum]} />
+      return <Tweet.Component key={key} tweet={tweets[key]} date={tweets[key].CreatedAt}/>
     })
   }
 
@@ -33,11 +32,14 @@ export const Component = (props: Props) => {
 
   return (
     <Wrapper>
+        <Menu>
       <StyledLink>
         <ReactRouter.Link to='/top'>
           <Text.Component text='ホームに戻る' />
         </ReactRouter.Link>
       </StyledLink>
+      <FollowButton.Component userId={user.UserName}/>
+      </Menu>
       <div>
         <ProfileWrapper>
               <Name>{user.Name}</Name>
@@ -49,7 +51,7 @@ export const Component = (props: Props) => {
           <MenuItem onClick={toggleLikeContent}>いいね</MenuItem>
         </Menu>
         <DisplayContent>
-            {/* <ul>{renderTweet()}</ul> */}
+            {/* {tweets && <ul>{renderTweet()}</ul>} */}
         </DisplayContent>
       </div>
     </Wrapper>

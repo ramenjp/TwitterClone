@@ -8,7 +8,7 @@ type Props = {
 
 export const Component = (props: Props) => {
   const { username } = props
-  const [contents, setContents] = React.useState([])
+  const [tweet, setTweet] = React.useState([])
   const [user, setUser] = React.useState({
     ID: 0,
     Name: '',
@@ -31,14 +31,13 @@ export const Component = (props: Props) => {
         'http://localhost:2001/otherProfile',params,{
           withCredentials: true
       })
-      console.log("res.data.TweetList",res.data.Tweets)
       setUser(res.data.User)
-      setContents(res.data.Tweets)
+      setTweet(res.data.Tweets)
     } catch (error) {
       console.log('error')
       return
     }
   }
 
-  return <OtherProfile.Component tweets={contents} user={user} />
+  return <OtherProfile.Component tweets={tweet} user={user} />
 }

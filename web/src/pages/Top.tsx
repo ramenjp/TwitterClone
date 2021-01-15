@@ -65,7 +65,6 @@ export const Component = () => {
           withCredentials: true
         })
         // TODO: フォローしてるユーザーのみツイートをとってくる
-        console.log("res.data.Tweets",res.data.Tweets)
         setUser(res.data.LoginUser)
         setUsers(res.data.Users)
         setTweets(res.data.Tweets)

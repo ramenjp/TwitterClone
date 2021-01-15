@@ -21,6 +21,7 @@ type Tweet = {
 
 export const Component = (props: Props) => {
   const { tweet, date, id } = props
+  const time = date.substring( 0, 16).replace('T', ' ');
   const [like, setLike] = React.useState(false)
   const [reTweet, setReTweet] = React.useState(false)
 
@@ -56,7 +57,7 @@ export const Component = (props: Props) => {
     if (!reTweet) {
       try {
         const params = new URLSearchParams()
-        params.append('test', 'test')
+        params.append('tweetId', id)
         const res = await axios.post('http://localhost:2001/reTweet', params, {
           withCredentials: true
         })
@@ -68,7 +69,7 @@ export const Component = (props: Props) => {
     } else {
       try {
         const params = new URLSearchParams()
-        params.append('test', 'test')
+         params.append('tweetId', tweetId)
         const res = await axios.post(
           'http://localhost:2001/deleteReTweet',
           params,
@@ -87,7 +88,7 @@ export const Component = (props: Props) => {
     <Tweet>
       {tweet}
       <Date>
-        {date}
+        {time}
       </Date>
       <Share>
         <LikeWrapper onClick={toggleLike}>

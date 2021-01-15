@@ -4,12 +4,15 @@ import styled from 'styled-components'
 
 import * as Tweet from '../components/Tweet'
 import * as Text from '../components/Text'
+
 type Props = {
   user?: any
   tweet?: any
+  likeTweet?: any
   username: string
   name: string
   bio: string
+  params:string
 //   image: any
 
   handleChange: (eventOrPath: string | React.ChangeEvent<any>) => void
@@ -17,14 +20,21 @@ type Props = {
 }
 
 export const Component = (props: Props) => {
-  const { tweet, user ,name,username,bio} = props
+  const { tweet,likeTweet, user ,name,username,bio,params} = props
   const [content, setContent] = React.useState(true)
   const [isEdit, setIsEdit] = React.useState(true)
   
   const renderTweet = () => {
     const tweetKeyList = Object.keys(tweet)
     return tweetKeyList.map(key => {
-      return <Tweet.Component key={key} tweet={tweet[key].Content} />
+      return <Tweet.Component key={key} tweet={tweet[key].Content} date={tweet[key].CreatedAt}/>
+    })
+  }
+
+  const renderLikeTweet = () => {
+    const tweetKeyList = Object.keys(likeTweet)
+    return tweetKeyList.map(key => {
+      return <Tweet.Component key={key} tweet={likeTweet[key].Content} date={tweet[key].CreatedAt}/>
     })
   }
   const toggleTweetContent = () => {
@@ -65,13 +75,18 @@ export const Component = (props: Props) => {
             <Name>{user.Name}</Name>
             <UserName>@{user.UserName}</UserName>
             <Bio>{user.Bio}</Bio>
+            <StyledLink>
+            <ReactRouter.Link to={`${params}/following`}>
+               フォロー中のユーザーを見る
+            </ReactRouter.Link>
+            </StyledLink>
           </ProfileWrapper>
           <Menu>
             <MenuItem onClick={toggleTweetContent}>ツイート</MenuItem>
             <MenuItem onClick={toggleLikeContent}>いいね</MenuItem>
           </Menu>
           <DisplayContent>
-            {content ? <ul>{renderTweet()}</ul> : <div>like</div>}
+            {content ? <ul>{renderTweet()}</ul> : <div>{renderLikeTweet()}</div>}
           </DisplayContent>
         </div>
       ) : (

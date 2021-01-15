@@ -33,7 +33,6 @@ export const Component = (props:Props) => {
       params.append('password', userData.password)
       const response = await axios.post('http://localhost:2001/createUser', params)
       if (response) {
-          console.log("redirect");
           props.history.replace(`login`);
       }
     },
